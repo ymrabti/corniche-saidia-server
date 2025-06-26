@@ -1,0 +1,35 @@
+# docker compose -f "docker-compose.yml" up -d --build
+
+services:
+    nodejs_express_app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+
+        ports:
+            - '7832:7832'
+
+        image: corniche_saidia_360
+        container_name: corniche_webservice
+        restart: always
+        user: 'node:node'
+
+        networks:
+            - ws-node-network
+
+    cloudflared:
+        image: cloudflare/cloudflared:latest
+        command: tunnel --url=http://nodejs_express_app:7832
+        restart: unless-stopped
+        depends_on:
+            - nodejs_express_app
+        networks:
+            - ws-node-network
+        container_name: corniche_cloudflared
+        volumes:
+            - ~/.cloudflared:/etc/cloudflared
+
+
+networks:
+    ws-node-network:
+        driver: bridge

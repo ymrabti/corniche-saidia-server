@@ -1,0 +1,10 @@
+{
+  "ext": "*.js",
+  "verbose": true,
+  "ignore": [
+    "**/test/**",
+    "**/docs/**",
+    "/client/**"
+  ],
+  "exec": "node index.js"
+}
