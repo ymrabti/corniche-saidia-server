@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Corniche Saidia 360</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2em;
+      }
+
+      a {
+        text-decoration: none;
+        color: #0645AD;
+      }
+
+      ul {
+        padding-left: 0;
+      }
+
+      li {
+        list-style: none;
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>📁 File Explorer</h1>
+    <div id="path"></div>
+    <ul id="file-list"></ul>
+
+    <script>
+      let currentPath = '';
+
+        function load(path = '') {
+          currentPath = path;
+          document.getElementById('path').textContent = '/' + path;
+
+          fetch(`/api/list?path=${encodeURIComponent(path)}`)
+            .then(res => res.json())
+            .then(data => {
+              const list = document.getElementById('file-list');
+              list.innerHTML = '';
+
+              if (path !== '') {
+                const parent = path.split('/').slice(0, -1).join('/');
+                list.innerHTML += `<li>⬅️ <a href="#" onclick="load('${parent}')">Back</a></li>`;
+              }
+
+              data.forEach(entry => {
+                const href = entry.type === 'folder'
+                  ? `#`
+                  : `/${entry.path}`;
+                const onclick = entry.type === 'folder'
+                  ? `onclick="load('${entry.path}')"`
+                  : `target="_blank"`;
+
+                list.innerHTML += `
+          <li>
+            ${entry.type === 'folder' ? '📁' : '📄'}
+            <a href="${href}" ${onclick}>${entry.name}</a>
+          </li>`;
+              });
+            });
+        }
+
+        load();
+    </script>
+  </body>
+
+</html>
