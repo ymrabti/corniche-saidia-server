@@ -3,24 +3,23 @@
 services:
     nodejs_express_app:
         build:
-            context: ./
+            context: .
             dockerfile: Dockerfile
 
         ports:
-            - '7832:7832'
+            - '7892:80'
 
         image: corniche_saidia_360
         container_name: corniche_webservice
         restart: always
-        user: 'node:node'
 
         networks:
             - ws-node-network
 
     cloudflared:
-        image: cloudflare/cloudflared:latest
+        image: cloudflare/cloudflared:2025.6.1
         command: tunnel --no-autoupdate run --token eyJhIjoiODUwYmVhYzdiNWQ4YzQwYTYxYzkxYTc5NWJkMzVkMmEiLCJ0IjoiY2Y2NmFmNjEtZjRlZi00MTE0LTkzM2MtZmYxYmZmNzkyNmJiIiwicyI6Ik9XSTNNMkl4TTJFdE5UaGxNUzAwTWpNMExUaG1OR1l0TmpsbU0yRXlNREpsTmpZNSJ9
-        # command: tunnel --url=http://nodejs_express_app:7832
+        # command: tunnel --url=http://nodejs_express_app:80
         restart: unless-stopped
         depends_on:
             - nodejs_express_app
