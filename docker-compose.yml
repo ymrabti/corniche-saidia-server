@@ -1,7 +1,7 @@
 # docker compose -f "docker-compose.yml" up -d --build
 
 services:
-    nodejs_express_app:
+    nginx_panos:
         build:
             context: .
             dockerfile: Dockerfile
@@ -19,10 +19,10 @@ services:
     cloudflared:
         image: cloudflare/cloudflared:2025.6.1
         command: tunnel --no-autoupdate run --token eyJhIjoiODUwYmVhYzdiNWQ4YzQwYTYxYzkxYTc5NWJkMzVkMmEiLCJ0IjoiY2Y2NmFmNjEtZjRlZi00MTE0LTkzM2MtZmYxYmZmNzkyNmJiIiwicyI6Ik9XSTNNMkl4TTJFdE5UaGxNUzAwTWpNMExUaG1OR1l0TmpsbU0yRXlNREpsTmpZNSJ9
-        # command: tunnel --url=http://nodejs_express_app:80
+        # command: tunnel --url=http://nginx_panos:80
         restart: unless-stopped
         depends_on:
-            - nodejs_express_app
+            - nginx_panos
         networks:
             - ws-node-network
         container_name: corniche_cloudflared
